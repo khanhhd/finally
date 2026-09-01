@@ -47,6 +47,30 @@ class TestGBMSimulator:
         sim.add_ticker("AAPL")
         assert len(sim._tickers) == 1
 
+    def test_add_ticker_uppercase_normalization(self):
+        """Test that tickers are normalized to uppercase, matching MassiveDataSource."""
+        sim = GBMSimulator(tickers=["AAPL"])
+        sim.add_ticker("tsla")
+        assert "TSLA" in sim.get_tickers()
+        assert sim.get_price("tsla") == sim.get_price("TSLA")
+
+    def test_add_ticker_strips_whitespace(self):
+        """Test that ticker whitespace is stripped."""
+        sim = GBMSimulator(tickers=["AAPL"])
+        sim.add_ticker("  TSLA  ")
+        assert "TSLA" in sim.get_tickers()
+
+    def test_constructor_normalizes_tickers(self):
+        """Test that tickers passed to the constructor are normalized too."""
+        sim = GBMSimulator(tickers=["aapl", " googl "])
+        assert set(sim.get_tickers()) == {"AAPL", "GOOGL"}
+
+    def test_remove_ticker_case_insensitive(self):
+        """Test that removing a ticker is case-insensitive, matching how it was added."""
+        sim = GBMSimulator(tickers=["AAPL", "GOOGL"])
+        sim.remove_ticker("googl")
+        assert "GOOGL" not in sim.get_tickers()
+
     def test_remove_nonexistent_is_noop(self):
         """Test that removing a non-existent ticker is a no-op."""
         sim = GBMSimulator(tickers=["AAPL"])

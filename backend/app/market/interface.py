@@ -42,6 +42,8 @@ class MarketDataSource(ABC):
     async def add_ticker(self, ticker: str) -> None:
         """Add a ticker to the active set. No-op if already present.
 
+        Implementations must normalize `ticker` (uppercase, stripped) so the
+        same symbol is tracked consistently regardless of data source.
         The next update cycle will include this ticker.
         """
 
@@ -49,7 +51,8 @@ class MarketDataSource(ABC):
     async def remove_ticker(self, ticker: str) -> None:
         """Remove a ticker from the active set. No-op if not present.
 
-        Also removes the ticker from the PriceCache.
+        Implementations must normalize `ticker` (uppercase, stripped) to
+        match how it was added. Also removes the ticker from the PriceCache.
         """
 
     @abstractmethod

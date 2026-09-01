@@ -44,7 +44,9 @@ MarketDataSource (ABC)
 
 ## Test Suite
 
-**73 tests, all passing.** 6 test modules in `backend/tests/market/`.
+**79 tests.** 6 test modules in `backend/tests/market/`.
+
+Includes coverage for ticker normalization (uppercase + whitespace-stripped) so `SimulatorDataSource` and `MassiveDataSource` behave identically given the same raw ticker input — the simulator previously tracked tickers case-sensitively, which could split `"AAPL"`/`"aapl"` into separate cache entries.
 
 | Module | Tests | Coverage |
 |--------|-------|----------|
